@@ -32,7 +32,6 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:23.0
     container_name: recruitment_keycloak
-    command: start-dev
     environment:
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://postgres:5432/recruitment_db
@@ -55,7 +54,10 @@ services:
       interval: 10s
       timeout: 5s
       retries: 20
-      start_period: 60s
+      start_period: 30s
+    volumes:
+      - ./keycloak-config/realm-export.json:/opt/keycloak/data/import/realm.json
+    command: start-dev --import-realm
 
   backend:
     build: ./backend
